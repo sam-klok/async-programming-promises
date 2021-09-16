@@ -28,7 +28,7 @@ export function getCatch() {
 export function chain() {
     axios.get("http://localhost:3000/orders/1")
     .then(({data}) => {
-        axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+        return axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
     })
     .then(({data})=>{
         setText(`City: ${data.city}`);
@@ -36,7 +36,33 @@ export function chain() {
 }
 
 export function chainCatch() {
+        axios.get("http://localhost:3000/orders/1")
+    .then(({data}) => {
+        //return   // comment out to thow error
+        axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+    })
+    .then(({data})=>{
+        setText(`City: ${data.city}`);
+    })
+    .catch(err=>setText(err));
 }
 
 export function final() {
+    showWaiting();
+    axios.get("http://localhost:3000/orders/1")
+    .then(({data}) => {
+        //return   // comment out to thow error
+        axios.get(`http://localhost:3000/addresses/${data.shippingAddress}`);
+    })
+    .then(({data})=>{
+        setText(`City: ${data.city}`);
+    })
+    .catch(err=>setText(err))
+    .finally(()=>{
+        setTimeout(()=>{
+            hideWaiting();
+        },1500);
+
+        appendText(" -- Copmpletely Done");
+    });
 }
